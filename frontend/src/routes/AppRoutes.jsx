@@ -8,7 +8,8 @@ import Audit from "../pages/Audit/Audit";
 import Reports from "../pages/Reports/Reports";
 import Notifications from "../pages/Notifications/Notifications";
 import Profile from "../pages/Profile/Profile";
-
+import Settings from "../pages/Settings/Settings";
+import NotFound from "../pages/NotFound/NotFound";
 
 import Allocation from "../pages/Allocation/Allocation";
 import Organization from "../pages/Organization/Organization";
@@ -58,6 +59,15 @@ export default function AppRoutes() {
                 <Route
                     path="/profile"
                     element={<Profile />}
+                />
+                <Route
+                    path="/settings"
+                    element={<Settings />}
+                />
+
+                <Route
+                    path="*"
+                    element={<NotFound />}
                 />
             </Routes>
 
