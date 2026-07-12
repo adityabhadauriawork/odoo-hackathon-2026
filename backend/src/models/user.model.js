@@ -119,9 +119,6 @@ const userSchema = new Schema(
 // =========================
 // Indexes
 // =========================
-
-userSchema.index({ email: 1 });
-userSchema.index({ employeeId: 1 });
 userSchema.index({ department: 1, role: 1 });
 
 // =========================

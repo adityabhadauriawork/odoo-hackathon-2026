@@ -1,64 +1,79 @@
-/**
- * User Routes for AssetFlow
- *
- * Routes for managing user details and status
- * All routes are protected by JWT authentication
- * Admin-only routes require explicit authorization
- */
+import express from "express";
 
-const express = require('express');
-const router = express.Router();
-const { protect, authorize } = require('../middlewares/authMiddleware');
-const {
+import authMiddleware from "../middlewares/auth.middleware.js";
+import authorizeRoles from "../middlewares/role.middleware.js";
+
+import {
   getAllUsers,
   getUserById,
   updateUser,
   deactivateUser,
+  reactivateUser,
+} from "../controllers/user.controller.js";
+
+const router = express.Router();
+
+/**
+ * ==========================================================
+ * User Management Routes
+ * ==========================================================
+ */
+
+/**
+ * @route   GET /api/users
+ * @desc    Get all users
+ * @access  Private
+ */
+router.get(
+  "/",
+  authMiddleware,
+  getAllUsers
+);
+
+/**
+ * @route   GET /api/users/:id
+ * @desc    Get user by ID
+ * @access  Private
+ */
+router.get(
+  "/:id",
+  authMiddleware,
+  getUserById
+);
+
+/**
+ * @route   PUT /api/users/:id
+ * @desc    Update user details
+ * @access  Private
+ */
+router.put(
+  "/:id",
+  authMiddleware,
+  updateUser
+);
+
+/**
+ * @route   PUT /api/users/:id/deactivate
+ * @desc    Deactivate a user
+ * @access  Private (Admin)
+ */
+router.put(
+  "/:id/deactivate",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  deactivateUser
+);
+
+/**
+ * @route   PUT /api/users/:id/reactivate
+ * @desc    Reactivate a user
+ * @access  Private (Admin)
+ */
+router.put(
+  "/:id/reactivate",
+  authMiddleware,
+  authorizeRoles("Admin"),
   reactivateUser
-} = require('../controllers/user.controller');
+);
 
-/**
- * GET / - Get list of all users (any authenticated user)
- * @route GET /
- * @middleware protect
- * @returns {Array} List of users (without password)
- */
-router.get('/', protect, getAllUsers);
-
-/**
- * GET /:userId - Get a specific user by ID
- * @route GET /:userId
- * @middleware protect
- * @param {string} userId - ID of the user to retrieve
- * @returns {Object} User details (without password)
- */
-router.get('/:userId', protect, getUserById);
-
-/**
- * PUT /:userId - Update user details (fullName, phone, department, profileImage)
- * @route PUT /:userId
- * @middleware protect
- * @param {string} userId - ID of the user to update
- * @returns {Object} Updated user details (without password)
- */
-router.put('/:userId', protect, updateUser);
-
-/**
- * PATCH /:userId/deactivate - Deactivate a user (soft delete)
- * @route PATCH /:userId/deactivate
- * @middleware protect, authorize('admin')
- * @param {string} userId - ID of the user to deactivate
- * @returns {Object} Confirmation message
- */
-router.patch('/:userId/deactivate', protect, authorize('admin'), deactivateUser);
-
-/**
- * PATCH /:userId/reactivate - Reactivate a user
- * @route PATCH /:userId/reactivate
- * @middleware protect, authorize('admin')
- * @param {string} userId - ID of the user to reactivate
- * @returns {Object} Confirmation message
- */
-router.patch('/:userId/reactivate', protect, authorize('admin'), reactivateUser);
-
-module.exports = router;
+export default router;
