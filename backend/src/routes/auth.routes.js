@@ -1,15 +1,34 @@
-const express = require('express');
+import express from "express";
+
+import {
+  signup,
+  login,
+  getCurrentUser,
+} from "../controllers/auth.controller.js";
+
+import authMiddleware from "../middlewares/auth.middleware.js";
+
 const router = express.Router();
-const { signup, login, getCurrentUser } = require('../controllers/auth.controller');
-const protect = require('../middlewares/auth.middleware');
 
-// Public route: Register a new user
-router.post('/signup', signup);
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 
-// Public route: Login and return JWT token
-router.post('/login', login);
+// Register a new user
+router.post("/signup", signup);
 
-// Protected route: Get current authenticated user (requires JWT token)
-router.get('/me', protect, getCurrentUser);
+// Login user and return JWT
+router.post("/login", login);
 
-module.exports = router;
+/*
+|--------------------------------------------------------------------------
+| Protected Routes
+|--------------------------------------------------------------------------
+*/
+
+// Get currently logged-in user
+router.get("/me", authMiddleware, getCurrentUser);
+
+export default router;

@@ -1,55 +1,74 @@
-const express = require('express');
+import express from "express";
+
+import {
+  createDepartment,
+  getDepartments,
+  getDepartmentById,
+  updateDepartment,
+  deleteDepartment,
+} from "../controllers/department.controller.js";
+
+import authMiddleware from "../middlewares/auth.middleware.js";
+import authorizeRoles from "../middlewares/role.middleware.js";
+
 const router = express.Router();
 
-const {
-    createDepartment,
-    getDepartments,
-    getDepartmentById,
-    updateDepartment,
-    deleteDepartment
-} = require('../controllers/department.controller');
-
-const { protect, authorize } = require('../middlewares/authMiddleware');
-
 /**
- * @route   POST /
+ * @route   POST /api/departments
  * @desc    Create a new department
- * @access  Private/Admin
- * @body    { name, description }
+ * @access  Private (Admin)
  */
-router.post('/', protect, authorize('admin'), createDepartment);
+router.post(
+  "/",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  createDepartment
+);
 
 /**
- * @route   GET /
+ * @route   GET /api/departments
  * @desc    Get all departments
- * @access  Private (Any authenticated user)
- * @query   [isActive] (optional boolean)
+ * @access  Private
  */
-router.get('/', protect, getDepartments);
+router.get(
+  "/",
+  authMiddleware,
+  getDepartments
+);
 
 /**
- * @route   GET /:id
- * @desc    Get a single department by ID
- * @access  Private (Any authenticated user)
- * @params  id
+ * @route   GET /api/departments/:id
+ * @desc    Get department by ID
+ * @access  Private
  */
-router.get('/:id', protect, getDepartmentById);
+router.get(
+  "/:id",
+  authMiddleware,
+  getDepartmentById
+);
 
 /**
- * @route   PUT /:id
- * @desc    Update a department
- * @access  Private/Admin
- * @params  id
- * @body    { name, description, isActive }
+ * @route   PUT /api/departments/:id
+ * @desc    Update department
+ * @access  Private (Admin)
  */
-router.put('/:id', protect, authorize('admin'), updateDepartment);
+router.put(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  updateDepartment
+);
 
 /**
- * @route   DELETE /:id
- * @desc    Deactivate/Soft delete a department
- * @access  Private/Admin
- * @params  id
+ * @route   DELETE /api/departments/:id
+ * @desc    Soft delete department
+ * @access  Private (Admin)
  */
-router.delete('/:id', protect, authorize('admin'), deleteDepartment);
+router.delete(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  deleteDepartment
+);
 
-module.exports = router;
+export default router;
