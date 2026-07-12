@@ -1,23 +1,55 @@
-import express from "express";
-import {
-  createDepartment,
-  getDepartments,
-  getDepartmentById,
-  updateDepartment,
-  deleteDepartment
-} from "../controllers/department.controller.js";
-
+const express = require('express');
 const router = express.Router();
 
-// Routes for /api/departments
-router.route("/")
-  .post(createDepartment)
-  .get(getDepartments);
+const {
+    createDepartment,
+    getDepartments,
+    getDepartmentById,
+    updateDepartment,
+    deleteDepartment
+} = require('../controllers/department.controller');
 
-// Routes for /api/departments/:id
-router.route("/:id")
-  .get(getDepartmentById)
-  .put(updateDepartment)
-  .delete(deleteDepartment);
+const { protect, authorize } = require('../middlewares/authMiddleware');
 
-export default router;
+/**
+ * @route   POST /
+ * @desc    Create a new department
+ * @access  Private/Admin
+ * @body    { name, description }
+ */
+router.post('/', protect, authorize('admin'), createDepartment);
+
+/**
+ * @route   GET /
+ * @desc    Get all departments
+ * @access  Private (Any authenticated user)
+ * @query   [isActive] (optional boolean)
+ */
+router.get('/', protect, getDepartments);
+
+/**
+ * @route   GET /:id
+ * @desc    Get a single department by ID
+ * @access  Private (Any authenticated user)
+ * @params  id
+ */
+router.get('/:id', protect, getDepartmentById);
+
+/**
+ * @route   PUT /:id
+ * @desc    Update a department
+ * @access  Private/Admin
+ * @params  id
+ * @body    { name, description, isActive }
+ */
+router.put('/:id', protect, authorize('admin'), updateDepartment);
+
+/**
+ * @route   DELETE /:id
+ * @desc    Deactivate/Soft delete a department
+ * @access  Private/Admin
+ * @params  id
+ */
+router.delete('/:id', protect, authorize('admin'), deleteDepartment);
+
+module.exports = router;
