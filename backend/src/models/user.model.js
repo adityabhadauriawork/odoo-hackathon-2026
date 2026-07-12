@@ -128,7 +128,7 @@ user // Add index for department and role to support filtering by department and
 userSchema.index({ department: 1, role: 1 });
 
 // Pre-save hook to hash password only if it's not already hashed
-Schema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -145,17 +145,17 @@ Schema.pre('save', async function (next) {
 });
 
 // Instance method to compare password (used during login)
-Schema.methods.comparePassword = async function (candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
 // Instance method to return clean JSON representation (removes sensitive fields)
-Schema.methods.toJSON = function () {
-  const  = this.toObject();
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
   
   // Remove sensitive fields
-  delete .password;
-  delete .__v;
+  delete user.password;
+  delete user.__v;
 
   return user;
 };
