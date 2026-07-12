@@ -28,146 +28,93 @@ export default function KPICards() {
 
         <Grid container spacing={3}>
 
-            {
+            {kpiData.map((item, index) => (
 
-                kpiData.map((item, index) => (
+                <Grid
+                    key={item.title}
+                    size={{
+                        xs: 12,
+                        sm: 6,
+                        lg: 3,
+                    }}
+                >
 
-                    <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={3}
-                        key={item.title}
+                    <Card
+                        sx={{
+                            borderRadius: 5,
+                            background:
+                                "linear-gradient(135deg,#0F172A,#1E293B)",
+                            color: "white",
+                            height: "100%",
+                            transition: ".3s",
+                            "&:hover": {
+                                transform: "translateY(-6px)",
+                                boxShadow:
+                                    "0 15px 40px rgba(34,211,238,.25)"
+                            }
+                        }}
                     >
 
-                        <Card
+                        <CardContent>
 
-                            sx={{
+                            <Box
+                                display="flex"
+                                justifyContent="space-between"
+                                alignItems="center"
+                            >
 
-                                borderRadius: 5,
+                                <Box>
 
-                                background:
-                                    "linear-gradient(135deg,#0F172A,#1E293B)",
-
-                                color: "white",
-
-                                transition: "0.3s",
-
-                                cursor: "pointer",
-
-                                "&:hover": {
-
-                                    transform: "translateY(-8px)",
-
-                                    boxShadow:
-                                        "0px 15px 40px rgba(34,211,238,.25)",
-
-                                },
-
-                            }}
-
-                        >
-
-                            <CardContent>
-
-                                <Box
-
-                                    display="flex"
-
-                                    justifyContent="space-between"
-
-                                    alignItems="center"
-
-                                >
-
-                                    <Box>
-
-                                        <Typography
-
-                                            sx={{
-                                                color: "#94A3B8",
-                                                fontSize: 15,
-                                            }}
-
-                                        >
-
-                                            {item.title}
-
-                                        </Typography>
-
-                                        <Typography
-
-                                            sx={{
-                                                fontSize: 36,
-                                                fontWeight: 800,
-                                                mt: 1,
-                                            }}
-
-                                        >
-
-                                            {item.value}
-
-                                        </Typography>
-
-                                    </Box>
-
-                                    <Box
-
-                                        sx={{
-
-                                            width: 60,
-
-                                            height: 60,
-
-                                            borderRadius: "18px",
-
-                                            background:
-                                                "rgba(34,211,238,.15)",
-
-                                            display: "flex",
-
-                                            justifyContent: "center",
-
-                                            alignItems: "center",
-
-                                            color: "#22D3EE",
-
-                                        }}
-
-                                    >
-
-                                        {icons[index]}
-
-                                    </Box>
-
-                                </Box>
-
-                                <Box mt={3}>
+                                    <Typography color="#94A3B8">
+                                        {item.title}
+                                    </Typography>
 
                                     <Typography
-
                                         sx={{
-                                            color: "#4ADE80",
-                                            fontWeight: 700,
+                                            fontSize: 36,
+                                            fontWeight: 800,
+                                            mt: 1
                                         }}
-
                                     >
-
-                                        ▲ {item.change}
-
+                                        {item.value}
                                     </Typography>
 
                                 </Box>
 
-                            </CardContent>
+                                <Box
+                                    sx={{
+                                        width: 60,
+                                        height: 60,
+                                        borderRadius: 3,
+                                        bgcolor: "rgba(34,211,238,.15)",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        color: "#22D3EE"
+                                    }}
+                                >
+                                    {icons[index]}
+                                </Box>
 
-                        </Card>
+                            </Box>
 
-                    </Grid>
+                            <Typography
+                                sx={{
+                                    mt: 3,
+                                    color: "#4ADE80",
+                                    fontWeight: 700
+                                }}
+                            >
+                                ▲ {item.change}
+                            </Typography>
 
-                ))
+                        </CardContent>
 
-            }
+                    </Card>
+
+                </Grid>
+
+            ))}
 
         </Grid>
 
