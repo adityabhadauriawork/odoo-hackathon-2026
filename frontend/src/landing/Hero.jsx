@@ -6,7 +6,6 @@ export default function Hero() {
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#070B14] text-white">
 
-            {/* Background Glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full bg-cyan-500/10 blur-[180px]" />
 
             <div className="relative max-w-5xl mx-auto px-8 text-center">
@@ -35,7 +34,7 @@ export default function Hero() {
                 <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: .3 }}
+                    transition={{ delay: 0.3 }}
                     className="mt-10 text-2xl text-gray-400 leading-10 max-w-3xl mx-auto"
                 >
                     The modern enterprise platform to manage assets,
@@ -46,7 +45,7 @@ export default function Hero() {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: .5 }}
+                    transition={{ delay: 0.5 }}
                     className="flex flex-col sm:flex-row justify-center gap-6 mt-16"
                 >
 
@@ -59,7 +58,7 @@ export default function Hero() {
                     </Link>
 
                     <Link
-                        to="/"
+                        to="/login"
                         className="px-10 py-5 rounded-full border border-white/20 text-white font-semibold text-lg hover:bg-white/10 duration-300"
                     >
                         Login
@@ -73,13 +72,11 @@ export default function Hero() {
                     transition={{ delay: 1 }}
                     className="mt-24"
                 >
-
                     <p className="text-gray-500 text-sm tracking-[6px] uppercase">
                         Scroll to Discover
                     </p>
 
                     <div className="w-[2px] h-20 bg-gradient-to-b from-cyan-400 to-transparent mx-auto mt-5 animate-pulse" />
-
                 </motion.div>
 
             </div>

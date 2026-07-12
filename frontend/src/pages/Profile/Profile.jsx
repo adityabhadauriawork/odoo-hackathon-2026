@@ -1,15 +1,4 @@
 import ProtectedLayout from "../../components/layout/ProtectedLayout";
-import { Typography } from "@mui/material";
-
-export default function Profile() {
-    return (
-        <ProtectedLayout>
-            <Typography variant="h4">
-                Profile
-            </Typography>
-        </ProtectedLayout>
-    );
-}import ProtectedLayout from "../../components/layout/ProtectedLayout";
 
 import {
     Typography,
@@ -34,18 +23,18 @@ export default function Profile() {
                 My Profile
             </Typography>
 
-            <Paper sx={{ p:4 }}>
+            <Paper sx={{ p: 4 }}>
 
                 <Grid container spacing={4}>
 
-                    <Grid size={{ xs:12 }} textAlign="center">
+                    <Grid item xs={12} textAlign="center">
 
                         <Avatar
                             sx={{
-                                width:120,
-                                height:120,
-                                margin:"auto",
-                                fontSize:40
+                                width: 120,
+                                height: 120,
+                                margin: "auto",
+                                fontSize: 40
                             }}
                         >
                             A
@@ -53,7 +42,7 @@ export default function Profile() {
 
                     </Grid>
 
-                    <Grid size={{ xs:12, md:6 }}>
+                    <Grid item xs={12} md={6}>
 
                         <TextField
                             fullWidth
@@ -63,7 +52,7 @@ export default function Profile() {
 
                     </Grid>
 
-                    <Grid size={{ xs:12, md:6 }}>
+                    <Grid item xs={12} md={6}>
 
                         <TextField
                             fullWidth
@@ -73,7 +62,7 @@ export default function Profile() {
 
                     </Grid>
 
-                    <Grid size={{ xs:12, md:6 }}>
+                    <Grid item xs={12} md={6}>
 
                         <TextField
                             fullWidth
@@ -83,7 +72,7 @@ export default function Profile() {
 
                     </Grid>
 
-                    <Grid size={{ xs:12, md:6 }}>
+                    <Grid item xs={12} md={6}>
 
                         <TextField
                             fullWidth
@@ -93,7 +82,7 @@ export default function Profile() {
 
                     </Grid>
 
-                    <Grid size={{ xs:12 }}>
+                    <Grid item xs={12}>
 
                         <Button
                             variant="contained"

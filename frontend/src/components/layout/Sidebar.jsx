@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
     MdDashboard,
     MdBusiness,
@@ -29,6 +29,17 @@ const menu = [
 ];
 
 export default function Sidebar() {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
+        navigate("/");
+
+    };
 
     return (
 
@@ -67,10 +78,10 @@ export default function Sidebar() {
                             className={({ isActive }) =>
 
                                 `flex items-center gap-4 px-5 py-4 rounded-2xl mb-2 transition-all duration-300
-                                
-                                ${isActive
-                                    ? "bg-cyan-500 text-black font-bold shadow-lg shadow-cyan-500/30"
-                                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                                ${
+                                    isActive
+                                        ? "bg-cyan-500 text-black font-bold shadow-lg shadow-cyan-500/30"
+                                        : "text-slate-300 hover:bg-slate-800 hover:text-white"
                                 }`
 
                             }
@@ -127,7 +138,13 @@ export default function Sidebar() {
 
                     </div>
 
-                    <button className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500 hover:bg-red-600 transition text-white font-semibold">
+                    <button
+
+                        onClick={handleLogout}
+
+                        className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500 hover:bg-red-600 transition text-white font-semibold"
+
+                    >
 
                         <MdLogout />
 

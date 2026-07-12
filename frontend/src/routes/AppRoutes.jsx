@@ -1,7 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
+import Landing from "../pages/Landing/Landing";
 import Login from "../pages/Login/Login";
+import Signup from "../pages/Signup/Signup";
+
 import Dashboard from "../pages/Dashboard/Dashboard";
+import Organization from "../pages/Organization/Organization";
+import AssetList from "../pages/Assets/AssetList";
+import Allocation from "../pages/Allocation/Allocation";
 import Booking from "../pages/Booking/Booking";
 import Maintenance from "../pages/Maintenance/Maintenance";
 import Audit from "../pages/Audit/Audit";
@@ -11,67 +17,126 @@ import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
 import NotFound from "../pages/NotFound/NotFound";
 
-import Allocation from "../pages/Allocation/Allocation";
-import Organization from "../pages/Organization/Organization";
-import AssetList from "../pages/Assets/AssetList";
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+
 export default function AppRoutes() {
 
     return (
 
-        <BrowserRouter>
+        <Routes>
 
-            <Routes>
+            {/* Public Routes */}
 
-                <Route path="/" element={<Login />} />
-                <Route path="/organization" element={<Organization />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/assets" element={<AssetList />} />
-                <Route
-                    path="/allocation"
-                    element={<Allocation />}
+            <Route path="/" element={<Landing />} />
 
-                />
-                <Route
-                    path="/booking"
-                    element={<Booking />}
-                />
+            <Route path="/login" element={<Login />} />
 
-                <Route
-                    path="/maintenance"
-                    element={<Maintenance />}
-                />
+            <Route path="/signup" element={<Signup />} />
 
-                <Route
-                    path="/audit"
-                    element={<Audit />}
-                />
+            {/* Protected Routes */}
 
-                <Route
-                    path="/reports"
-                    element={<Reports />}
-                />
+            <Route
+                path="/dashboard"
+                element={
+                    <ProtectedRoute>
+                        <Dashboard />
+                    </ProtectedRoute>
+                }
+            />
 
-                <Route
-                    path="/notifications"
-                    element={<Notifications />}
-                />
+            <Route
+                path="/organization"
+                element={
+                    <ProtectedRoute>
+                        <Organization />
+                    </ProtectedRoute>
+                }
+            />
 
-                <Route
-                    path="/profile"
-                    element={<Profile />}
-                />
-                <Route
-                    path="/settings"
-                    element={<Settings />}
-                />
+            <Route
+                path="/assets"
+                element={
+                    <ProtectedRoute>
+                        <AssetList />
+                    </ProtectedRoute>
+                }
+            />
 
-                <Route
-                    path="*"
-                    element={<NotFound />}
-                />
-            </Routes>
+            <Route
+                path="/allocation"
+                element={
+                    <ProtectedRoute>
+                        <Allocation />
+                    </ProtectedRoute>
+                }
+            />
 
-        </BrowserRouter>
+            <Route
+                path="/booking"
+                element={
+                    <ProtectedRoute>
+                        <Booking />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/maintenance"
+                element={
+                    <ProtectedRoute>
+                        <Maintenance />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/audit"
+                element={
+                    <ProtectedRoute>
+                        <Audit />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/reports"
+                element={
+                    <ProtectedRoute>
+                        <Reports />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/notifications"
+                element={
+                    <ProtectedRoute>
+                        <Notifications />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute>
+                        <Profile />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/settings"
+                element={
+                    <ProtectedRoute>
+                        <Settings />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route path="*" element={<NotFound />} />
+
+        </Routes>
 
     );
 
