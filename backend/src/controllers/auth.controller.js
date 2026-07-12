@@ -112,12 +112,16 @@ export const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const expiresIn = process.env.JWT_EXPIRES_IN || DEFAULT_EXPIRES_IN;
     const token = jwt.sign(
-      { id: user._id, role: user.role },
-      JWT_SECRET,
-      { expiresIn }
-    );
+  {
+    id: user._id,
+    role: user.role,
+  },
+  process.env.JWT_SECRET,
+  {
+    expiresIn: process.env.JWT_EXPIRES_IN || "7d",
+  }
+);
 
     // Update last login timestamp
     user.lastLogin = new Date();
