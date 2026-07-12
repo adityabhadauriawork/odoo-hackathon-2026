@@ -1,56 +1,117 @@
 import mongoose from "mongoose";
 
+
 const assetSchema = new mongoose.Schema(
-  {
-    assetName: {
-      type: String,
-      required: true,
+{
+    name:{
+        type:String,
+        required:true,
+        trim:true
     },
 
-    category: {
-      type: String,
-      required: true,
+
+    assetTag:{
+        type:String,
+        required:true,
+        unique:true
     },
 
-    serialNumber: {
-      type: String,
-      required: true,
-      unique: true,
+
+    serialNumber:{
+        type:String,
+        unique:true,
+        sparse:true
     },
 
-    status: {
-      type: String,
-      enum: [
-        "Available",
-        "Allocated",
-        "Maintenance",
-        "Booked",
-      ],
-      default: "Available",
+
+    category:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Category",
+        required:true
     },
 
-    condition: {
-      type: String,
-      enum: ["Excellent", "Good", "Fair", "Damaged"],
-      default: "Excellent",
+
+    department:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Department"
     },
 
-    purchaseDate: {
-      type: Date,
+
+    location:{
+        type:String,
+        trim:true
     },
 
-    location: {
-      type: String,
-      default: "Main Office",
+
+    condition:{
+        type:String,
+        enum:[
+            "Excellent",
+            "Good",
+            "Fair",
+            "Damaged"
+        ],
+        default:"Good"
     },
 
-    description: {
-      type: String,
+
+    status:{
+        type:String,
+        enum:[
+            "Available",
+            "Allocated",
+            "Reserved",
+            "Under Maintenance",
+            "Lost",
+            "Retired",
+            "Disposed"
+        ],
+        default:"Available"
     },
-  },
-  {
-    timestamps: true,
-  }
+
+
+    sharedBookable:{
+        type:Boolean,
+        default:false
+    },
+
+
+    purchaseDate:{
+        type:Date
+    },
+
+
+    purchaseCost:{
+        type:Number
+    },
+
+
+    warranty:{
+        type:String
+    },
+
+
+    images:[
+        {
+            type:String
+        }
+    ],
+
+
+    documents:[
+        {
+            type:String
+        }
+    ]
+
+},
+{
+    timestamps:true
+}
 );
 
-export default mongoose.model("Asset", assetSchema);
+
+export default mongoose.model(
+    "Asset",
+    assetSchema
+);
