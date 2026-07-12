@@ -1,109 +1,197 @@
-import Department from "../models/department.model.js";
+const Department = require('../models/department.model');
 
-// @desc    Create a new department
-// @route   POST /api/departments
-export const createDepartment = async (req, res) => {
-  try {
-    const { name, description, departmentHead, parentDepartment, status } = req.body;
+/**
+ * @desc    Create a new department
+ * @route   POST /api/departments
+ * @access  Private/Admin (Handled by route middleware)
+ */
+const createDepartment = async (req, res) => {
+    try {
+        const { name, description } = req.body;
 
-    // Check if department with the same name already exists
-    const existingDepartment = await Department.findOne({ name });
-    if (existingDepartment) {
-      return res.status(400).json({ message: "Department name already exists." });
+        // Validate name is present
+        if (!name) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Department name is required.' 
+            });
+        }
+
+        // Check for duplicate department name
+        const existingDepartment = await Department.findOne({ name });
+        if (existingDepartment) {
+            return res.status(409).json({ 
+                success: false, 
+                message: 'A department with this name already exists.' 
+            });
+        }
+
+        // Create the department
+        const department = await Department.create({
+            name,
+            description
+        });
+
+        return res.status(201).json({
+            success: true,
+            data: department,
+            message: 'Department created successfully.'
+        });
+
+    } catch (error) {
+        console.error('Error in createDepartment:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Server error while creating department.'
+        });
     }
-
-    const department = await Department.create({
-      name,
-      description,
-      departmentHead,
-      parentDepartment,
-      status
-    });
-
-    res.status(201).json(department);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 
-// @desc    Get all departments
-// @route   GET /api/departments
-export const getDepartments = async (req, res) => {
-  try {
-    const departments = await Department.find()
-      .populate("departmentHead", "name email") // Adjust based on your User schema
-      .populate("parentDepartment", "name")     // Populates parent department details
-      .sort("name"); // Sort alphabetically by name
+/**
+ * @desc    Get all departments
+ * @route   GET /api/departments
+ * @access  Private
+ */
+const getDepartments = async (req, res) => {
+    try {
+        const query = {};
+        
+        // Support optional query filter by isActive status
+        if (req.query.isActive !== undefined) {
+            query.isActive = req.query.isActive === 'true';
+        }
 
-    res.status(200).json(departments);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+        const departments = await Department.find(query);
+        
+        return res.status(200).json({
+            success: true,
+            count: departments.length,
+            data: departments
+        });
+    } catch (error) {
+        console.error('Error in getDepartments:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Server error while fetching departments.'
+        });
+    }
 };
 
-// @desc    Get a single department by ID
-// @route   GET /api/departments/:id
-export const getDepartmentById = async (req, res) => {
-  try {
-    const department = await Department.findById(req.params.id)
-      .populate("departmentHead", "name email")
-      .populate("parentDepartment", "name");
+/**
+ * @desc    Get a single department by ID
+ * @route   GET /api/departments/:id
+ * @access  Private
+ */
+const getDepartmentById = async (req, res) => {
+    try {
+        const department = await Department.findById(req.params.id);
+        
+        if (!department) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Department not found.' 
+            });
+        }
 
-    if (!department) {
-      return res.status(404).json({ message: "Department not found." });
+        return res.status(200).json({
+            success: true,
+            data: department
+        });
+    } catch (error) {
+        console.error('Error in getDepartmentById:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Server error while fetching department.'
+        });
     }
-
-    res.status(200).json(department);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 
-// @desc    Update a department
-// @route   PUT /api/departments/:id
-export const updateDepartment = async (req, res) => {
-  try {
-    const { name, description, departmentHead, parentDepartment, status } = req.body;
+/**
+ * @desc    Update a department
+ * @route   PUT /api/departments/:id
+ * @access  Private/Admin
+ */
+const updateDepartment = async (req, res) => {
+    try {
+        const { name, description, isActive } = req.body;
+        
+        let department = await Department.findById(req.params.id);
+        
+        if (!department) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Department not found.' 
+            });
+        }
 
-    const department = await Department.findById(req.params.id);
+        // If updating the name, check for duplicates with other departments
+        if (name && name !== department.name) {
+            const existingName = await Department.findOne({ name });
+            if (existingName) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'Another department with this name already exists.'
+                });
+            }
+        }
 
-    if (!department) {
-      return res.status(404).json({ message: "Department not found." });
+        department.name = name || department.name;
+        department.description = description !== undefined ? description : department.description;
+        department.isActive = isActive !== undefined ? isActive : department.isActive;
+
+        await department.save();
+
+        return res.status(200).json({
+            success: true,
+            data: department,
+            message: 'Department updated successfully.'
+        });
+    } catch (error) {
+        console.error('Error in updateDepartment:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Server error while updating department.'
+        });
     }
-
-    // Update fields if provided
-    if (name) department.name = name;
-    if (description) department.description = description;
-    if (departmentHead !== undefined) department.departmentHead = departmentHead;
-    if (parentDepartment !== undefined) department.parentDepartment = parentDepartment;
-    if (status) department.status = status;
-
-    const updatedDepartment = await department.save();
-    res.status(200).json(updatedDepartment);
-  } catch (error) {
-    // Catch Mongoose duplicate key error if trying to update to an existing name
-    if (error.code === 11000) {
-      return res.status(400).json({ message: "Department name already exists." });
-    }
-    res.status(500).json({ message: error.message });
-  }
 };
 
-// @desc    Delete a department
-// @route   DELETE /api/departments/:id
-export const deleteDepartment = async (req, res) => {
-  try {
-    const department = await Department.findByIdAndDelete(req.params.id);
+/**
+ * @desc    Deactivate/Soft delete a department
+ * @route   DELETE /api/departments/:id
+ * @access  Private/Admin
+ */
+const deleteDepartment = async (req, res) => {
+    try {
+        const department = await Department.findById(req.params.id);
+        
+        if (!department) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Department not found.' 
+            });
+        }
 
-    if (!department) {
-      return res.status(404).json({ message: "Department not found." });
+        // Soft delete: set isActive to false instead of removing from DB
+        department.isActive = false;
+        await department.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Department deactivated successfully.'
+        });
+    } catch (error) {
+        console.error('Error in deleteDepartment:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Server error while deleting department.'
+        });
     }
+};
 
-    // Note: If this department is a parent to others, you might want to update 
-    // the child departments to set parentDepartment to null before deleting this one.
-
-    res.status(200).json({ message: "Department deleted successfully." });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+module.exports = {
+    createDepartment,
+    getDepartments,
+    getDepartmentById,
+    updateDepartment,
+    deleteDepartment
 };
