@@ -1,0 +1,27 @@
+/**
+ * Standardized error class for throwing API errors.
+ */
+class ApiError extends Error {
+    constructor(
+        statusCode,
+        message = "Something went wrong",
+        errors = [],
+        stack = ""
+    ) {
+        super(message);
+        this.statusCode = statusCode;
+        this.data = null;
+        this.message = message;
+        this.success = false;
+        this.errors = errors;
+
+        // Capture the stack trace for easier debugging
+        if (stack) {
+            this.stack = stack;
+        } else {
+            Error.captureStackTrace(this, this.constructor);
+        }
+    }
+}
+
+export { ApiError };
