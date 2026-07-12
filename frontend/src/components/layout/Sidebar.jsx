@@ -9,7 +9,9 @@ import {
     MdFactCheck,
     MdAnalytics,
     MdNotifications,
-    MdPerson
+    MdPerson,
+    MdSettings,
+    MdLogout
 } from "react-icons/md";
 
 const menu = [
@@ -23,41 +25,121 @@ const menu = [
     { name: "Reports", path: "/reports", icon: <MdAnalytics /> },
     { name: "Notifications", path: "/notifications", icon: <MdNotifications /> },
     { name: "Profile", path: "/profile", icon: <MdPerson /> },
+    { name: "Settings", path: "/settings", icon: <MdSettings /> },
 ];
 
 export default function Sidebar() {
 
     return (
 
-        <div className="w-64 bg-slate-900 text-white min-h-screen">
+        <aside className="w-72 min-h-screen bg-[#0B1120] border-r border-slate-800 flex flex-col justify-between">
 
-            <div className="text-2xl font-bold p-6">
+            <div>
 
-                AssetFlow
+                <div className="px-8 py-8 border-b border-slate-800">
+
+                    <h1 className="text-4xl font-black">
+
+                        <span className="text-white">Asset</span>
+
+                        <span className="text-cyan-400">Flow</span>
+
+                    </h1>
+
+                    <p className="text-slate-400 text-sm mt-2">
+
+                        Enterprise Asset Management
+
+                    </p>
+
+                </div>
+
+                <div className="mt-8 px-4">
+
+                    {menu.map((item) => (
+
+                        <NavLink
+
+                            key={item.name}
+
+                            to={item.path}
+
+                            className={({ isActive }) =>
+
+                                `flex items-center gap-4 px-5 py-4 rounded-2xl mb-2 transition-all duration-300
+                                
+                                ${isActive
+                                    ? "bg-cyan-500 text-black font-bold shadow-lg shadow-cyan-500/30"
+                                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                                }`
+
+                            }
+
+                        >
+
+                            <span className="text-2xl">
+
+                                {item.icon}
+
+                            </span>
+
+                            <span className="text-lg">
+
+                                {item.name}
+
+                            </span>
+
+                        </NavLink>
+
+                    ))}
+
+                </div>
 
             </div>
 
-            {menu.map((item) => (
+            <div className="p-6 border-t border-slate-800">
 
-                <NavLink
+                <div className="bg-slate-900 rounded-2xl p-4">
 
-                    key={item.name}
+                    <div className="flex items-center gap-4">
 
-                    to={item.path}
+                        <div className="w-12 h-12 rounded-full bg-cyan-500 flex items-center justify-center text-xl font-bold text-black">
 
-                    className="flex items-center gap-3 px-6 py-4 hover:bg-slate-800"
+                            A
 
-                >
+                        </div>
 
-                    {item.icon}
+                        <div>
 
-                    {item.name}
+                            <h3 className="font-bold text-white">
 
-                </NavLink>
+                                Aditya
 
-            ))}
+                            </h3>
 
-        </div>
+                            <p className="text-sm text-slate-400">
+
+                                Administrator
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <button className="mt-5 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-500 hover:bg-red-600 transition text-white font-semibold">
+
+                        <MdLogout />
+
+                        Logout
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </aside>
 
     );
 

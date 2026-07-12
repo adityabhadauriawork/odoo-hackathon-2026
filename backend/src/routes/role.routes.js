@@ -1,35 +1,43 @@
-/**
- * Role Routes for AssetFlow
- *
- * Routes for managing user roles in the system.
- * All routes are protected and require admin privileges.
- *
- * Routes:
- * - PUT /assign: Assign a role to a user (admin-only)
- * - GET /:userId: Get the role of a specific user (admin-only)
- */
+import express from "express";
 
-const express = require('express');
+import {
+  assignRole,
+  getUserRole,
+} from "../controllers/role.controller.js";
+
+import authMiddleware from "../middlewares/auth.middleware.js";
+import authorizeRoles from "../middlewares/role.middleware.js";
+
 const router = express.Router();
-const { protect, authorize } = require('../middlewares/authMiddleware');
-const { assignRole, getUserRole } = require('../controllers/role.controller');
 
 /**
- * Assign a role to a user
- * @route PUT /assign
- * @middleware protect, authorize('admin')
- * @body { userId: String, role: String }
- * @returns {Object} Success message and updated user data
+ * ==========================================================
+ * Role Management Routes
+ * ==========================================================
  */
-router.put('/assign', protect, authorize('admin'), assignRole);
 
 /**
- * Get the role of a specific user
- * @route GET /:userId
- * @middleware protect, authorize('admin')
- * @param {String} userId - ID of the user to retrieve
- * @returns {Object} User data including role
+ * @route   PUT /api/roles/assign
+ * @desc    Assign a role to a user
+ * @access  Private (Admin)
  */
-router.get('/:userId', protect, authorize('admin'), getUserRole);
+router.put(
+  "/assign",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  assignRole
+);
 
-module.exports = router;
+/**
+ * @route   GET /api/roles/:userId
+ * @desc    Get role of a specific user
+ * @access  Private (Admin)
+ */
+router.get(
+  "/:userId",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  getUserRole
+);
+
+export default router;
