@@ -1,0 +1,42 @@
+export const assets = [
+  {
+    id: "AST-101",
+    name: "Dell Latitude 7440",
+    category: "Laptop",
+    assignedTo: "Rahul Sharma",
+    status: "Allocated",
+    location: "IT Department",
+  },
+  {
+    id: "AST-102",
+    name: "MacBook Pro M3",
+    category: "Laptop",
+    assignedTo: "-",
+    status: "Available",
+    location: "Storage",
+  },
+  {
+    id: "AST-103",
+    name: "HP EliteBook",
+    category: "Laptop",
+    assignedTo: "Priya Singh",
+    status: "Maintenance",
+    location: "Repair Center",
+  },
+  {
+    id: "AST-104",
+    name: "Samsung Monitor",
+    category: "Monitor",
+    assignedTo: "Ankit Verma",
+    status: "Allocated",
+    location: "HR",
+  },
+  {
+    id: "AST-105",
+    name: "iPhone 15",
+    category: "Mobile",
+    assignedTo: "-",
+    status: "Available",
+    location: "IT Store",
+  },
+];
