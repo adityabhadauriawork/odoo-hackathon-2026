@@ -1,11 +1,11 @@
-const Department = require('../models/department.model');
+import Department from '../models/department.model.js';
 
 /**
  * @desc    Create a new department
  * @route   POST /api/departments
  * @access  Private/Admin (Handled by route middleware)
  */
-const createDepartment = async (req, res) => {
+export const createDepartment = async (req, res) => {
     try {
         const { name, description } = req.body;
 
@@ -52,7 +52,7 @@ const createDepartment = async (req, res) => {
  * @route   GET /api/departments
  * @access  Private
  */
-const getDepartments = async (req, res) => {
+export const getDepartments = async (req, res) => {
     try {
         const query = {};
         
@@ -82,7 +82,7 @@ const getDepartments = async (req, res) => {
  * @route   GET /api/departments/:id
  * @access  Private
  */
-const getDepartmentById = async (req, res) => {
+export const getDepartmentById = async (req, res) => {
     try {
         const department = await Department.findById(req.params.id);
         
@@ -111,7 +111,7 @@ const getDepartmentById = async (req, res) => {
  * @route   PUT /api/departments/:id
  * @access  Private/Admin
  */
-const updateDepartment = async (req, res) => {
+export const updateDepartment = async (req, res) => {
     try {
         const { name, description, isActive } = req.body;
         
@@ -160,7 +160,7 @@ const updateDepartment = async (req, res) => {
  * @route   DELETE /api/departments/:id
  * @access  Private/Admin
  */
-const deleteDepartment = async (req, res) => {
+export const deleteDepartment = async (req, res) => {
     try {
         const department = await Department.findById(req.params.id);
         
@@ -186,12 +186,4 @@ const deleteDepartment = async (req, res) => {
             message: 'Server error while deleting department.'
         });
     }
-};
-
-module.exports = {
-    createDepartment,
-    getDepartments,
-    getDepartmentById,
-    updateDepartment,
-    deleteDepartment
 };

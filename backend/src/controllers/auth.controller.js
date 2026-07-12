@@ -14,8 +14,9 @@
  * - All required environment variables are defined (JWT_SECRET, JWT_EXPIRES_IN)
  */
 
-const User = require('../models/user.model');
-const jwt = require('jsonwebtoken');
+import User from '../models/user.model.js';
+import jwt from 'jsonwebtoken';
+
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
 // Default expiry in days (fallback to 7 days)
@@ -26,7 +27,7 @@ const DEFAULT_EXPIRES_IN = '7d';
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-exports.signup = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const { fullName, email, password, department, phone } = req.body;
 
@@ -75,7 +76,7 @@ exports.signup = async (req, res) => {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -140,7 +141,7 @@ exports.login = async (req, res) => {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-exports.getCurrentUser = async (req, res) => {
+export const getCurrentUser = async (req, res) => {
   try {
     const userId = req.user.id;
 

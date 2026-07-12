@@ -7,7 +7,7 @@
  * This controller enforces soft deletion (isActive) and prevents self-deactivation
  */
 
-const User = require('../models/user.model');
+import User from '../models/user.model.js';
 
 /**
  * Gets all users with optional filters
@@ -15,7 +15,7 @@ const User = require('../models/user.model');
  * @param {Object} res - Express response object
  * @returns {Promise<void>} Returns list of users with filters applied
  */
-exports.getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
   try {
     const { department, isActive } = req.query;
 
@@ -48,7 +48,7 @@ exports.getAllUsers = async (req, res) => {
  * @param {Object} res - Express response object
  * @returns {Promise<void>} Returns single user or 404 if not found
  */
-exports.getUserById = async (req, res) => {
+export const getUserById = async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -82,7 +82,7 @@ exports.getUserById = async (req, res) => {
  * @param {Object} res - Express response object
  * @returns {Promise<void>} Returns updated user or 404 if not found
  */
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -147,7 +147,7 @@ exports.updateUser = async (req, res) => {
  * @param {Object} res - Express response object
  * @returns {Promise<void>} Returns confirmation or 403/404
  */
-exports.deactivateUser = async (req, res) => {
+export const deactivateUser = async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -193,7 +193,7 @@ exports.deactivateUser = async (req, res) => {
  * @param {Object} res - Express response object
  * @returns {Promise<void>} Returns confirmation or 404
  */
-exports.reactivateUser = async (req, res) => {
+export const reactivateUser = async (req, res) => {
   try {
     const { userId } = req.params;
 

@@ -16,7 +16,7 @@
  * It only updates the role field of an existing user.
  */
 
-const User = require('../models/user.model');
+import User from '../models/user.model.js';
 
 /**
  * Assigns a role to a user by ID
@@ -24,7 +24,7 @@ const User = require('../models/user.model');
  * @param {Object} res - Express response object
  * @returns {Promise<void>} Resolves when role is updated or rejects with error
  */
-exports.assignRole = async (req, res) => {
+export const assignRole = async (req, res) => {
   try {
     const { userId } = req.body;
     const { role } = req.body;
@@ -93,7 +93,7 @@ exports.assignRole = async (req, res) => {
  * @param {Object} res - Express response object
  * @returns {Promise<void>} Resolves when user role is returned or rejects with error
  */
-exports.getUserRole = async (req, res) => {
+export const getUserRole = async (req, res) => {
   try {
     const { userId } = req.params;
 
