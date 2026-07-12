@@ -8,8 +8,9 @@
  * These are used to secure routes in the application.
  */
 
-const jwt = require('jsonwebtoken');
-const User = require('../models/user.model');
+import jwt from 'jsonwebtoken';
+import User from '../models/user.model.js';
+
 const { JWT_SECRET } = process.env;
 
 /**
@@ -20,7 +21,7 @@ const { JWT_SECRET } = process.env;
  * @param {Function} next - Callback to pass control to next middleware
  * @returns {Promise<void>} Resolves when user is attached or rejects with error
  */
-const protect = async (req, res, next) => {
+export const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -46,6 +47,7 @@ const protect = async (req, res, next) => {
     // Fetch user from database by ID
     try {
       const user = await User.findById(req.user.id).select('-password');
+
       if (!user) {
         return res.status(401).json({
           message: 'User not found'
@@ -83,15 +85,14 @@ const protect = async (req, res, next) => {
  * @param {...String} roles - List of allowed roles (e.g., 'admin', 'manager')
  * @returns {Function} Middleware function that checks role and calls next if valid
  */
-const authorize = (...roles) => {
+export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         message: 'Insufficient permissions'
       });
     }
+
     next();
   };
 };
-
-module.exports = { protect, authorize };
