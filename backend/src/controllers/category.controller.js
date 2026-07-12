@@ -1,11 +1,11 @@
-const Category = require('../models/category.model');
+import Category from '../models/category.model.js';
 
 /**
  * @desc    Create a new category
  * @route   POST /api/categories
  * @access  Private/Admin (Handled by route middleware)
  */
-const createCategory = async (req, res) => {
+export const createCategory = async (req, res) => {
     try {
         const { name, description } = req.body;
 
@@ -52,7 +52,7 @@ const createCategory = async (req, res) => {
  * @route   GET /api/categories
  * @access  Private
  */
-const getCategories = async (req, res) => {
+export const getCategories = async (req, res) => {
     try {
         const query = {};
         
@@ -82,7 +82,7 @@ const getCategories = async (req, res) => {
  * @route   GET /api/categories/:id
  * @access  Private
  */
-const getCategoryById = async (req, res) => {
+export const getCategoryById = async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);
         
@@ -111,7 +111,7 @@ const getCategoryById = async (req, res) => {
  * @route   PUT /api/categories/:id
  * @access  Private/Admin
  */
-const updateCategory = async (req, res) => {
+export const updateCategory = async (req, res) => {
     try {
         const { name, description, isActive } = req.body;
         
@@ -160,7 +160,7 @@ const updateCategory = async (req, res) => {
  * @route   DELETE /api/categories/:id
  * @access  Private/Admin
  */
-const deleteCategory = async (req, res) => {
+export const deleteCategory = async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);
         
@@ -186,12 +186,4 @@ const deleteCategory = async (req, res) => {
             message: 'Server error while deleting category.'
         });
     }
-};
-
-module.exports = {
-    createCategory,
-    getCategories,
-    getCategoryById,
-    updateCategory,
-    deleteCategory
 };
