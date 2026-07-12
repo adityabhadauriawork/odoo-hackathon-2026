@@ -3,61 +3,64 @@ import ProtectedLayout from "../../components/layout/ProtectedLayout";
 import {
     Typography,
     Paper,
-    Switch,
     FormControlLabel,
-    Divider
+    Switch,
+    Divider,
 } from "@mui/material";
 
-export default function Settings(){
+import { useThemeContext } from "../../context/ThemeContext";
 
-    return(
+export default function Settings() {
+
+    const { darkMode, toggleTheme } = useThemeContext();
+
+    return (
 
         <ProtectedLayout>
 
             <Typography
                 variant="h4"
                 fontWeight="bold"
-                mb={3}
+                mb={4}
             >
-
                 Settings
-
             </Typography>
 
-            <Paper sx={{p:4}}>
+            <Paper
+                sx={{
+                    p: 4,
+                    borderRadius: 4,
+                }}
+            >
 
                 <FormControlLabel
-
                     control={<Switch defaultChecked />}
-
                     label="Email Notifications"
-
                 />
 
-                <Divider sx={{my:2}}/>
+                <Divider sx={{ my: 3 }} />
 
                 <FormControlLabel
-
-                    control={<Switch defaultChecked />}
-
+                    control={
+                        <Switch
+                            checked={darkMode}
+                            onChange={toggleTheme}
+                        />
+                    }
                     label="Dark Theme"
-
                 />
 
-                <Divider sx={{my:2}}/>
+                <Divider sx={{ my: 3 }} />
 
                 <FormControlLabel
-
                     control={<Switch />}
-
                     label="Two Factor Authentication"
-
                 />
 
             </Paper>
 
         </ProtectedLayout>
 
-    )
+    );
 
 }
