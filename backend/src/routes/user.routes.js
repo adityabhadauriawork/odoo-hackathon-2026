@@ -1,26 +1,64 @@
-import express from "express";
-import {
-  createUser,
-  loginUser,
-  getUsers,
+/**
+ * User Routes for AssetFlow
+ *
+ * Routes for managing user details and status
+ * All routes are protected by JWT authentication
+ * Admin-only routes require explicit authorization
+ */
+
+const express = require('express');
+const router = express.Router();
+const { protect, authorize } = require('../middlewares/authMiddleware');
+const {
+  getAllUsers,
   getUserById,
   updateUser,
-  deleteUser
-} from "../controllers/user.controller.js";
+  deactivateUser,
+  reactivateUser
+} = require('../controllers/user.controller');
 
-const router = express.Router();
+/**
+ * GET / - Get list of all users (any authenticated user)
+ * @route GET /
+ * @middleware protect
+ * @returns {Array} List of users (without password)
+ */
+router.get('/', protect, getAllUsers);
 
-// Authentication Routes
-router.post("/register", createUser);
-router.post("/login", loginUser);
+/**
+ * GET /:userId - Get a specific user by ID
+ * @route GET /:userId
+ * @middleware protect
+ * @param {string} userId - ID of the user to retrieve
+ * @returns {Object} User details (without password)
+ */
+router.get('/:userId', protect, getUserById);
 
-// Standard CRUD Routes
-router.route("/")
-  .get(getUsers);
+/**
+ * PUT /:userId - Update user details (fullName, phone, department, profileImage)
+ * @route PUT /:userId
+ * @middleware protect
+ * @param {string} userId - ID of the user to update
+ * @returns {Object} Updated user details (without password)
+ */
+router.put('/:userId', protect, updateUser);
 
-router.route("/:id")
-  .get(getUserById)
-  .put(updateUser)
-  .delete(deleteUser);
+/**
+ * PATCH /:userId/deactivate - Deactivate a user (soft delete)
+ * @route PATCH /:userId/deactivate
+ * @middleware protect, authorize('admin')
+ * @param {string} userId - ID of the user to deactivate
+ * @returns {Object} Confirmation message
+ */
+router.patch('/:userId/deactivate', protect, authorize('admin'), deactivateUser);
 
-export default router;
+/**
+ * PATCH /:userId/reactivate - Reactivate a user
+ * @route PATCH /:userId/reactivate
+ * @middleware protect, authorize('admin')
+ * @param {string} userId - ID of the user to reactivate
+ * @returns {Object} Confirmation message
+ */
+router.patch('/:userId/reactivate', protect, authorize('admin'), reactivateUser);
+
+module.exports = router;
