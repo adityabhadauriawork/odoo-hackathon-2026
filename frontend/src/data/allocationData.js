@@ -1,30 +1,34 @@
 export const allocations = [
-
-{
-id:1,
-asset:"Dell Latitude 7440",
-employee:"Rahul Sharma",
-department:"IT",
-returnDate:"2026-07-20",
-status:"Allocated"
-},
-
-{
-id:2,
-asset:"MacBook Pro",
-employee:"Priya Singh",
-department:"HR",
-returnDate:"2026-07-16",
-status:"Allocated"
-},
-
-{
-id:3,
-asset:"Conference Room A",
-employee:"Finance Team",
-department:"Finance",
-returnDate:"2026-07-13",
-status:"Reserved"
-}
-
+  {
+    id: 1,
+    asset: "Dell Latitude 7440",
+    employee: "Rahul Sharma",
+    department: "IT",
+    allocatedDate: "12 Jul 2026",
+    status: "Active",
+  },
+  {
+    id: 2,
+    asset: "MacBook Pro M3",
+    employee: "Priya Singh",
+    department: "HR",
+    allocatedDate: "10 Jul 2026",
+    status: "Active",
+  },
+  {
+    id: 3,
+    asset: "HP EliteBook",
+    employee: "Ankit Verma",
+    department: "Finance",
+    allocatedDate: "08 Jul 2026",
+    status: "Returned",
+  },
+  {
+    id: 4,
+    asset: "Samsung Monitor",
+    employee: "Neha Gupta",
+    department: "IT",
+    allocatedDate: "05 Jul 2026",
+    status: "Active",
+  },
 ];
