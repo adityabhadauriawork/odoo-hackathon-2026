@@ -1,4 +1,6 @@
 import Maintenance from "../models/maintenance.model.js";
+// 1. Import the notification service
+import { sendNotification } from "../services/notification.service.js"; 
 
 // @desc    Create a new maintenance request
 // @route   POST /api/maintenance
@@ -13,6 +15,14 @@ export const createMaintenanceRequest = async (req, res) => {
       priority,
       images
     });
+
+    // 2. Automatically notify the employee that their request was logged
+    await sendNotification(
+      raisedBy,
+      "Maintenance Request Logged",
+      `Your maintenance ticket for the issue "${issue}" has been submitted successfully and is pending review.`,
+      "Maintenance"
+    );
 
     res.status(201).json(maintenance);
   } catch (error) {
@@ -69,6 +79,10 @@ export const updateMaintenanceRequest = async (req, res) => {
       return res.status(404).json({ message: "Maintenance request not found." });
     }
 
+    // 3. Keep track of specific changes BEFORE saving to trigger accurate notifications
+    const oldTechnician = maintenance.technician;
+    const oldStatus = maintenance.status;
+
     // Update fields if they are provided in the request body
     if (status) maintenance.status = status;
     if (priority) maintenance.priority = priority;
@@ -77,6 +91,29 @@ export const updateMaintenanceRequest = async (req, res) => {
     if (approvedBy) maintenance.approvedBy = approvedBy;
 
     const updatedMaintenance = await maintenance.save();
+
+    // 4. Trigger Notifications conditionally based on what changed
+    
+    // Condition A: A new technician has been assigned to the request
+    if (technician && String(oldTechnician) !== String(technician)) {
+      await sendNotification(
+        technician,
+        "New Maintenance Assignment",
+        `You have been assigned to handle a maintenance issue: "${maintenance.issue}". Priority: ${maintenance.priority}.`,
+        "Maintenance"
+      );
+    }
+
+    // Condition B: The status of the request has been changed (e.g., In Progress, Resolved)
+    if (status && oldStatus !== status) {
+      await sendNotification(
+        maintenance.raisedBy,
+        `Ticket Status Update: ${status}`,
+        `The status of your maintenance request for "${maintenance.issue}" has been updated to "${status}".`,
+        "Maintenance"
+      );
+    }
+
     res.status(200).json(updatedMaintenance);
   } catch (error) {
     res.status(500).json({ message: error.message });
