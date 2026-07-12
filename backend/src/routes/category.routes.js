@@ -1,55 +1,80 @@
-const express = require('express');
+import express from "express";
+
+import {
+  createCategory,
+  getCategories,
+  getCategoryById,
+  updateCategory,
+  deleteCategory,
+} from "../controllers/category.controller.js";
+
+import authMiddleware from "../middlewares/auth.middleware.js";
+import authorizeRoles from "../middlewares/role.middleware.js";
+
 const router = express.Router();
 
-const {
-    createCategory,
-    getCategories,
-    getCategoryById,
-    updateCategory,
-    deleteCategory
-} = require('../controllers/category.controller');
-
-const { protect, authorize } = require('../middlewares/authMiddleware');
+/**
+ * ==========================================================
+ * Category Routes
+ * ==========================================================
+ */
 
 /**
- * @route   POST /
+ * @route   POST /api/categories
  * @desc    Create a new category
- * @access  Private/Admin
- * @body    { name, description }
+ * @access  Private (Admin)
  */
-router.post('/', protect, authorize('admin'), createCategory);
+router.post(
+  "/",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  createCategory
+);
 
 /**
- * @route   GET /
+ * @route   GET /api/categories
  * @desc    Get all categories
- * @access  Private (Any authenticated user)
- * @query   [isActive] (optional boolean)
+ * @access  Private
  */
-router.get('/', protect, getCategories);
+router.get(
+  "/",
+  authMiddleware,
+  getCategories
+);
 
 /**
- * @route   GET /:id
- * @desc    Get a single category by ID
- * @access  Private (Any authenticated user)
- * @params  id
+ * @route   GET /api/categories/:id
+ * @desc    Get category by ID
+ * @access  Private
  */
-router.get('/:id', protect, getCategoryById);
+router.get(
+  "/:id",
+  authMiddleware,
+  getCategoryById
+);
 
 /**
- * @route   PUT /:id
- * @desc    Update a category
- * @access  Private/Admin
- * @params  id
- * @body    { name, description, isActive }
+ * @route   PUT /api/categories/:id
+ * @desc    Update category
+ * @access  Private (Admin)
  */
-router.put('/:id', protect, authorize('admin'), updateCategory);
+router.put(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  updateCategory
+);
 
 /**
- * @route   DELETE /:id
- * @desc    Deactivate/Soft delete a category
- * @access  Private/Admin
- * @params  id
+ * @route   DELETE /api/categories/:id
+ * @desc    Soft delete category
+ * @access  Private (Admin)
  */
-router.delete('/:id', protect, authorize('admin'), deleteCategory);
+router.delete(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("Admin"),
+  deleteCategory
+);
 
-module.exports = router;
+export default router;

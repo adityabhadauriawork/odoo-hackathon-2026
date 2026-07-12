@@ -1,98 +1,52 @@
-/**
- * Auth Middleware for AssetFlow
- *
- * Provides two core authentication functions:
- * - protect: verifies JWT token and sets req.user
- * - authorize: role-based permission enforcement
- *
- * These are used to secure routes in the application.
- */
+import jwt from "jsonwebtoken";
+import User from "../models/user.model.js";
 
-import jwt from 'jsonwebtoken';
-import User from '../models/user.model.js';
-
-const { JWT_SECRET } = process.env;
-
-/**
- * protect middleware
- * Verifies JWT token and attaches user to req.user
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @param {Function} next - Callback to pass control to next middleware
- * @returns {Promise<void>} Resolves when user is attached or rejects with error
- */
-export const protect = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    // Check if Authorization header exists and starts with "Bearer"
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Check if token exists
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
-        message: 'Authorization token required'
+        success: false,
+        message: "Authorization token required",
       });
     }
 
-    const token = authHeader.split(' ')[1];
+    // Extract token
+    const token = authHeader.split(" ")[1];
 
-    // Verify token
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      req.user = { id: decoded.id, role: decoded.role };
-    } catch (error) {
+    // Verify JWT
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Find user
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
       return res.status(401).json({
-        message: 'Invalid or expired token'
+        success: false,
+        message: "User not found",
       });
     }
 
-    // Fetch user from database by ID
-    try {
-      const user = await User.findById(req.user.id).select('-password');
-
-      if (!user) {
-        return res.status(401).json({
-          message: 'User not found'
-        });
-      }
-
-      // Check if user is active
-      if (!user.isActive) {
-        return res.status(403).json({
-          message: 'User account is inactive'
-        });
-      }
-
-      // Attach user to request
-      req.user = user;
-    } catch (error) {
-      console.error('Error fetching user in protect middleware:', error);
-      return res.status(500).json({
-        message: 'Internal server error'
+    // Check if account is active
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: "User account is inactive",
       });
     }
+
+    // Attach user to request
+    req.user = user;
 
     next();
   } catch (error) {
-    console.error('Unexpected error in protect middleware:', error);
-    return res.status(500).json({
-      message: 'Internal server error'
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
     });
   }
 };
 
-/**
- * authorize middleware
- * Checks if the user's role is in the allowed list of roles
- * @param {...String} roles - List of allowed roles (e.g., 'admin', 'manager')
- * @returns {Function} Middleware function that checks role and calls next if valid
- */
-export const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
-        message: 'Insufficient permissions'
-      });
-    }
-
-    next();
-  };
-};
+export default authMiddleware;
